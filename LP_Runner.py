@@ -14,7 +14,7 @@ Summary:
 "-----------------------------------------------------------------------------"
 import numpy as np
 
-""" User Input Parameters """
+""" User Inputs """
 "-----------------------------------------------------------------------------"
 # Objective Function:
 objective = 'maximize'
