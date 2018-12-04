@@ -32,6 +32,7 @@ constraint[3] = ['name_3', [-2, 1], '<=', 2]
 # Tolerance Conditions: 
 # Makes the (abs(x) <= tolerance) equal 0 in c_bar calculations
 tolerance = 1e-10
+decimals = 3
 
 # Output:
 # End Phase 1... begin Phase 2. 
@@ -63,6 +64,7 @@ constraint[3] = ['name_3', [0, 1, 0, 0, 1], '=', 3]
 # Tolerance Conditions: 
 # Makes the (abs(x) <= tolerance) equal 0 in c_bar calculations
 tolerance = 1e-10
+decimals = 3
 
 # Output:
 # End Phase 1... begin Phase 2. 
@@ -91,6 +93,7 @@ constraint[5] = ['name_5', [225, 100], '>=', 15000]
 # Tolerance Conditions: 
 # Makes the (abs(x) <= tolerance) equal 0 in c_bar calculations
 tolerance = 1e-10
+decimals = 3
 
 # Output:
 # STOP (P1): infeasible - artificials in Basis
