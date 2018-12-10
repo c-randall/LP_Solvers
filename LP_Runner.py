@@ -50,7 +50,7 @@ pointer['coeff'] = 1
 pointer['inequality'] = 2
 pointer['b-value'] = 3
 
-""" Run Standard From Conversion """
+""" Run Standard Form Conversion """
 "-----------------------------------------------------------------------------"
 # Build dictionary to pass information to subfunctions:
 user_inputs = {}
