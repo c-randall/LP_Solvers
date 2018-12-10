@@ -29,6 +29,10 @@ constraint[1] = ['name_1', [1, 1], '<=', 4]
 constraint[2] = ['name_2', [1, -2], '<=', 2]
 constraint[3] = ['name_3', [-2, 1], '<=', 2]
 
+# Toggles/options for sensitivity and incoming basis selections:
+sensitivity = 'on'   # runs a RHS sensitivity analysis ('on' or 'off')
+incoming = 'last'    # incoming varialbe ('first' or 'last') neg c_bar value
+
 # Tolerance Conditions: 
 # Makes the (abs(x) <= tolerance) equal 0 in c_bar calculations
 tolerance = 1e-10
@@ -61,6 +65,10 @@ constraint[1] = ['name_1', [1, 1, -1, 0, 0], '=', 2]
 constraint[2] = ['name_2', [-1, 1, 0, -1, 0], '=', 1]
 constraint[3] = ['name_3', [0, 1, 0, 0, 1], '=', 3]
 
+# Toggles/options for sensitivity and incoming basis selections:
+sensitivity = 'off'  # runs a RHS sensitivity analysis ('on' or 'off')
+incoming = 'last'    # incoming varialbe ('first' or 'last') neg c_bar value
+
 # Tolerance Conditions: 
 # Makes the (abs(x) <= tolerance) equal 0 in c_bar calculations
 tolerance = 1e-10
@@ -90,6 +98,10 @@ constraint[3] = ['name_3', [150, 200], '>=', 12000]
 constraint[4] = ['name_4', [250, 400], '>=', 20000]
 constraint[5] = ['name_5', [225, 100], '>=', 15000]
 
+# Toggles/options for sensitivity and incoming basis selections:
+sensitivity = 'on'   # runs a RHS sensitivity analysis ('on' or 'off')
+incoming = 'last'    # incoming varialbe ('first' or 'last') neg c_bar value
+
 # Tolerance Conditions: 
 # Makes the (abs(x) <= tolerance) equal 0 in c_bar calculations
 tolerance = 1e-10
@@ -98,7 +110,32 @@ decimals = 3
 # Output:
 # STOP (P1): infeasible - artificials in Basis
 
-""" HW13-P2: investments """
+""" Boundedness - Testing unbounded regions """
+"-----------------------------------------------------------------------------"
+# Objective Function:
+objective = 'maximize'
+c_coeff = [4, 6] 
+
+# Constraints:
+constraint = {}
+constraint[1] = ['name_1', [2, -2], '<=', 6]
+constraint[2] = ['name_2', [4, 0], '<=', 16]
+
+# Toggles/options for sensitivity and incoming basis selections:
+sensitivity = 'on'   # runs a RHS sensitivity analysis ('on' or 'off')
+incoming = 'last'    # incoming varialbe ('first' or 'last') neg c_bar value
+
+# Tolerance Conditions: 
+# Makes the (abs(x) <= tolerance) equal 0 in c_bar calculations
+tolerance = 1e-10
+decimals = 3          # up to this many decimals will be reported
+
+# Output:
+# End Phase 1... begin Phase 2. 
+# 
+# STOP (P2): problem is unbounded
+
+""" HW13-P2: investments with a sensitivity report """
 "-----------------------------------------------------------------------------"
 # Objective Function:
 objective = 'maximize'

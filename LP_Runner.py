@@ -18,13 +18,16 @@ import numpy as np
 "-----------------------------------------------------------------------------"
 # Objective Function:
 objective = 'maximize'
-c_coeff = [1, 2] 
+c_coeff = [13, 16, 16, 14, 39] 
 
 # Constraints:
 constraint = {}
-constraint[1] = ['name_1', [1, 1], '<=', 4]
-constraint[2] = ['name_2', [1, -2], '<=', 2]
-constraint[3] = ['name_3', [-2, 1], '<=', 2]
+constraint[1] = ['time_0', [11, 53, 5, 5, 29], '<=', 40]
+constraint[2] = ['time_1', [3, 6, 5, 1, 34], '<=', 20]
+for i in range(5):
+    frac_coeff = np.zeros(5)
+    frac_coeff[i] = 1
+    constraint[i+3] = ['frac_'+str(i+1), frac_coeff.tolist(), '<=', 1]
 
 # Toggles/options for sensitivity and incoming basis selections:
 sensitivity = 'on'   # runs a RHS sensitivity analysis ('on' or 'off')
@@ -33,7 +36,7 @@ incoming = 'last'    # incoming varialbe ('first' or 'last') neg c_bar value
 # Tolerance Conditions: 
 # Makes the (abs(x) <= tolerance) equal 0 in c_bar calculations
 tolerance = 1e-10
-decimals = 3          # up to this many decimals will be reported
+decimals = 3          # up to this many decimals will be printed in output
 
 """ Report User Input Errors """
 "-----------------------------------------------------------------------------"
@@ -49,7 +52,7 @@ pointer['b-value'] = 3
 
 """ Run Standard From Conversion """
 "-----------------------------------------------------------------------------"
-# Build dictionary to pass information to standard form:
+# Build dictionary to pass information to subfunctions:
 user_inputs = {}
 user_inputs['objective'] = objective
 user_inputs['c_coeff'] = c_coeff
@@ -73,7 +76,8 @@ solution = phase_2(user_inputs, conversion, initial_solution)
 
 """ If specified, perform a RHS Sensitivity Analysis """
 "-----------------------------------------------------------------------------"
-if sensitivity == 'on':
+if all([sensitivity == 'on', initial_solution['feasibility'] == 'feasible',
+        solution['bounded'] == 'yes']):
     from RHS_Sensitivity import rhs_sensitivity
     rhs_sensitivity_report = rhs_sensitivity(user_inputs, constraint, 
                                              conversion, solution)

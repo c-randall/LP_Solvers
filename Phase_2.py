@@ -39,6 +39,7 @@ def phase_2(user_inputs, conversion, initial_solution):
     else:
         start = 1
         count = 1
+        bounded = 'yes'
     
     # Build the Basis c-vector:
         c_B = np.zeros(m)
@@ -93,6 +94,7 @@ def phase_2(user_inputs, conversion, initial_solution):
         A_bar_t_ratio = A_bar_t
                    
         if all(A_bar_t <= 0):
+            bounded = 'no'
             print('STOP (P2): problem is unbounded')
             break
     
@@ -118,12 +120,12 @@ def phase_2(user_inputs, conversion, initial_solution):
     """ Post-Processing for Output Dictionary """
     "-------------------------------------------------------------------------"
     solution = {}
-    if objective == 'maximize':
-        y_bar = -1*y_bar
-    
+    solution['bounded'] = bounded
     # If Feasible... Store Phase 2 Solution:
-    if initial_solution['feasibility'] == 'feasible':
+    if all([initial_solution['feasibility'] == 'feasible', bounded == 'yes']):
         solution['A_B_inv'] = A_B_inv
+        if objective == 'maximize':
+            y_bar = -1*y_bar
         solution['duals'] = y_bar
         solution['variables'] = x[:n]
         solution['slacks'] = x[n:]
