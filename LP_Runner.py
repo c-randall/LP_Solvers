@@ -12,7 +12,6 @@ Summary:
 
 """ Import Useful Modules """
 "-----------------------------------------------------------------------------"
-import time
 import numpy as np
 
 """ User Inputs """
