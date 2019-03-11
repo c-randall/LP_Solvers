@@ -1,4 +1,4 @@
-https://zenodo.org/badge/160264638.svg
+[![DOI](https://zenodo.org/badge/160264638.svg)](https://zenodo.org/badge/latestdoi/160264638)
 
 # Simplex-Method
 Simplex algorithm for linear programming optimization (with sensitivity analysis option for constraints)
