@@ -16,7 +16,7 @@ import numpy as np
 
 """ Function definition """
 "-----------------------------------------------------------------------------"
-def rhs_sensitivity(user_inputs, constraint, conversion, solution):
+def rhs_sensitivity(user_inputs, constraint, conversion, solution, pass_rhs):
     
     # Read out user values and extract current optimal solution:
     pointer = user_inputs['pointer']
@@ -36,7 +36,7 @@ def rhs_sensitivity(user_inputs, constraint, conversion, solution):
         e_i[i,0] = 1.
         
         # Figure out how basis varialbes change:
-        x_change = solution['A_B_inv'].dot(e_i)
+        x_change = pass_rhs['A_B_inv'].dot(e_i)
         x_order = np.concatenate((solution['Basis'].reshape(Nc,1), 
                                   x_change), axis=1)
         x_order.sort(axis=0)

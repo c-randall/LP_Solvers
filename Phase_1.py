@@ -13,10 +13,13 @@ Summary:
 """ Import needed modules """
 "-----------------------------------------------------------------------------"
 import numpy as np
+import time
 
 def phase_1(user_inputs, conversion):
     """ Pre-Processing """
-    "-------------------------------------------------------------------------"   
+    "-------------------------------------------------------------------------" 
+    t1 = time.time()
+    
     # Extract dictionary for readability:
     A = conversion['A']
     b = conversion['b']
@@ -25,16 +28,36 @@ def phase_1(user_inputs, conversion):
     m = conversion['m']
     n_slack = conversion['n_slack']
     
-    # Augment matrix with "artificial variables" as starting Basis:
-    A_aug = np.hstack((A, np.identity(m)))
-    c_tilde = np.hstack((np.zeros(n+n_slack), np.ones(m)))
-    Basis = np.arange(n+n_slack, n+n_slack+m) + 1
-    A_B_inv = np.identity(m)
+    # Augment matrix with "artificial variables" as necessary:
+    Basis = np.arange(m)
+    I = np.identity(m)
+    a_ind = n+n_slack
+    A_aug = A
+    
+    for i in range(m):
+        
+        i_B = []
+    
+        for j in range(len(A[0,:])):
+            if np.sum(abs(I[:,i] - A[:,j])) == 0:
+                i_B.append(j +1)
+    
+        if not i_B:
+            i_B.append(a_ind +1)
+            a_ind += 1
+            A_aug = np.hstack([A_aug, np.reshape(I[:,i],[m,1])])
+            
+        Basis[i] = i_B[0]
+
+    c_vars = np.zeros(n+n_slack)
+    c_arts = np.ones(len(A_aug[0,:]) - len(A[0,:]))
+    c_tilde = np.hstack((c_vars, c_arts))
+    A_B_inv = I
     
     # Force Loop to Start and Assume Feasible:
     feasibility = 'feasible'
     start = 1
-    count = 1
+    count = 0
     
     # Build the Basis c-vector:
     c_B = np.zeros(m)
@@ -68,6 +91,13 @@ def phase_1(user_inputs, conversion):
             if any(c_B != 0):
                 feasibility = 'infeasible'
                 print('STOP (P1):', feasibility, '- artificials in Basis')
+                print('iterations =', count, 
+                      ', time =', round(time.time()-t1,2), 's \n')
+                
+            else:
+                print('End Phase 1... begin Phase 2.')
+                print('iterations =', count, 
+                      ', time =', round(time.time()-t1,2), 's \n')
             
             break
         
@@ -103,15 +133,10 @@ def phase_1(user_inputs, conversion):
     # Generate dictionary for outputs:
     initial_solution = {}
     initial_solution['Basis'] = Basis
-    initial_solution['A_B_inv'] = A_B_inv
-    initial_solution['solution'] = x
     initial_solution['variables'] = x[:n]
     initial_solution['slacks'] = x[n:n+n_slack]
     initial_solution['auxilary'] = x[n+n_slack:]
     initial_solution['feasibility'] = feasibility
-    initial_solution['count_P1'] = count
-    
-    if feasibility == 'feasible':
-        print('End Phase 1... begin Phase 2. \n')
-    
+    initial_solution['count'] = count       
+            
     return initial_solution

@@ -13,10 +13,13 @@ Summary:
 """ Import needed modules """
 "-----------------------------------------------------------------------------"
 import numpy as np
+import time
 
 """ Function definition """
 "-----------------------------------------------------------------------------"
 def phase_2(user_inputs, conversion, initial_solution):
+    t1 = time.time()
+    
     """ Pre-Processing """
     "-------------------------------------------------------------------------"    
     # Extract dictionary:
@@ -30,15 +33,16 @@ def phase_2(user_inputs, conversion, initial_solution):
     b = conversion['b']
     c_coeff = conversion['c_coeff']
     
-    Basis = initial_solution['Basis']
-    A_B_inv = initial_solution['A_B_inv']  
+    Basis = np.copy(initial_solution['Basis'])
+    A_B_inv = np.identity(m)
     
     # If Feasible... Force Loop to Start:
     if initial_solution['feasibility'] == 'infeasible':
         start = 0
+        bounded = 'n/a'
     else:
         start = 1
-        count = 1
+        count = 0
         bounded = 'yes'
     
     # Build the Basis c-vector:
@@ -57,7 +61,7 @@ def phase_2(user_inputs, conversion, initial_solution):
     
     """ Simplex Method Loop """
     "-------------------------------------------------------------------------"
-    while start == 1:       
+    while start == 1:
         """ Step 1.) Compute current basic feasible solution """
         # Calculate the solution for the current basis:
         b_bar = A_B_inv.dot(b)
@@ -80,8 +84,10 @@ def phase_2(user_inputs, conversion, initial_solution):
                 optimal_value = -1*optimal_value
             
             print('STOP (P2): c_bar values were all >= 0. \n')
-            print('Solution: \n x =', np.round(x[0:n], user_inputs['dec']))
-            print('\n Optimal Objective Value:', optimal_value)
+            print('Solution: \n   x =', np.round(x[0:n], user_inputs['dec']))
+            print('\n   Optimal Objective Value:', optimal_value)
+            print('   iterations =', count, 
+                  ', time =', round(time.time()-t1,2), 's')
             break
         
         else:
@@ -96,6 +102,8 @@ def phase_2(user_inputs, conversion, initial_solution):
         if all(A_bar_t <= 0):
             bounded = 'no'
             print('STOP (P2): problem is unbounded')
+            print('iterations =', count, 
+                  ', time =', round(time.time()-t1,2), 's')
             break
     
         A_bar_t_ratio[A_bar_t == 0] = -1      # Make any 0's negative (ignored)
@@ -120,16 +128,18 @@ def phase_2(user_inputs, conversion, initial_solution):
     """ Post-Processing for Output Dictionary """
     "-------------------------------------------------------------------------"
     solution = {}
-    solution['bounded'] = bounded
-    # If Feasible... Store Phase 2 Solution:
-    if all([initial_solution['feasibility'] == 'feasible', bounded == 'yes']):
-        solution['A_B_inv'] = A_B_inv
-        if objective == 'maximize':
-            y_bar = -1*y_bar
-        solution['duals'] = y_bar
+    # Store Phase 2 solution or termination criteria:
+    solution['Basis'] = Basis
+    if objective == 'maximize':
+        y_bar = -1*y_bar
+    if bounded == 'yes':
         solution['variables'] = x[:n]
         solution['slacks'] = x[n:]
-        solution['Basis'] = Basis
-        solution['count_P2'] = count
+    solution['duals'] = y_bar
+    solution['bounded'] = bounded
+    solution['count'] = count
     
-    return solution
+    pass_rhs = {}
+    pass_rhs['A_B_inv'] = A_B_inv
+        
+    return solution, pass_rhs

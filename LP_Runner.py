@@ -12,6 +12,7 @@ Summary:
 
 """ Import Useful Modules """
 "-----------------------------------------------------------------------------"
+import time
 import numpy as np
 
 """ User Inputs """
@@ -50,7 +51,7 @@ pointer['coeff'] = 1
 pointer['inequality'] = 2
 pointer['b-value'] = 3
 
-""" Run Standard Form Conversion """
+""" Run Standard From Conversion """
 "-----------------------------------------------------------------------------"
 # Build dictionary to pass information to subfunctions:
 user_inputs = {}
@@ -72,7 +73,7 @@ initial_solution = phase_1(user_inputs, conversion)
 """ Run Phase II """
 "-----------------------------------------------------------------------------"
 from Phase_2 import phase_2
-solution = phase_2(user_inputs, conversion, initial_solution)
+solution, pass_rhs = phase_2(user_inputs, conversion, initial_solution)
 
 """ If specified, perform a RHS Sensitivity Analysis """
 "-----------------------------------------------------------------------------"
@@ -80,4 +81,4 @@ if all([sensitivity == 'on', initial_solution['feasibility'] == 'feasible',
         solution['bounded'] == 'yes']):
     from RHS_Sensitivity import rhs_sensitivity
     rhs_sensitivity_report = rhs_sensitivity(user_inputs, constraint, 
-                                             conversion, solution)
+                                             conversion, solution, pass_rhs)
