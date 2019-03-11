@@ -20,6 +20,7 @@ The LP_Runner.py file contains the following variables to be edited as needed by
 ** NOTE: The solution is stored at a higher precision in the 'solution' dictionary output. This input simply allows for a cleaner output in the terminal when first presented with the solution.
 
 ## License
+This tool is released under the BSD-3 clause license, see LICENSE.md for details.
 
 ## Citing the Model
  This model is versioned using Zenodo:
