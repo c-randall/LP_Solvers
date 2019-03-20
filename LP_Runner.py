@@ -5,8 +5,9 @@ Author:
     Corey R. Randall
 
 Summary:
-    Phase I of Simplex Method coded in Python for MEGN 586. Work completed at 
-    Colorado School of Mines during the Fall 2018 semester.
+    Input and runner file for Primal Simplex Method. Inputs can also be loaded
+    from a separate file for larger problems. An example of a script for a 
+    larger problem is shown in pv_batt_sizing.py. 
 
 """
 
