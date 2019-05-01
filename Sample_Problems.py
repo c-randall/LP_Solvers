@@ -177,3 +177,49 @@ decimals = 3          # up to this many decimals will be reported
 #  4: ('frac_3_range', [0.0, 2.996], 'dual:', 10.125),
 #  5: ('frac_4_range', [0.0, 3.319], 'dual:', 12.063),
 #  6: ('frac_5_range', [0.288, 'inf'], 'dual:', -0.0)}
+
+""" Primal - Dual pairs: """
+"-----------------------------------------------------------------------------"
+"set 1..."
+# Primal Objective Function:
+objective = 'minimize'
+c_coeff = [-1, -1] 
+
+# Primal Constraints:
+constraint = {}
+constraint[1] = ['name_1', [-1, 1], '<=', 1]
+constraint[2] = ['name_2', [4, -1], '<=', 10]
+
+# Dual Objective Function:
+objective = 'maximize'
+c_coeff = [1, -1, 10, -10] 
+
+# Dual Constraints:
+constraint = {}
+constraint[1] = ['name_1', [-1, 1, 4, -4], '<=', -1]
+constraint[2] = ['name_2', [1, -1, -1, 1], '<=', -1]
+constraint[3] = ['name_3', [1, -1, 0, 0], '<=', 0]
+constraint[4] = ['name_4', [0, 0, 1, -1], '<=', 0]
+
+"set 2..."
+# Primal Objective Function:
+objective = 'minimize'
+c_coeff = [1, -2, 0, 0, 0] 
+
+# Primal Constraints:
+constraint = {}
+constraint[1] = ['name_1', [1, 1, -1, 0, 0], '=', 2]
+constraint[2] = ['name_2', [-1, 1, 0, -1, 0], '=', 1]
+constraint[3] = ['name_3', [0, 1, 0, 0, 1], '=', 3]
+
+# Dual Objective Function:
+objective = 'maximize'
+c_coeff = [2, -2, 1, -1, 3, -3] 
+
+# Dual Constraints:
+constraint = {}
+constraint[1] = ['name_1', [1, -1, -1, 1, 0, 0], '<=', 1]
+constraint[2] = ['name_2', [1, -1, 1, -1, 1, -1], '<=', -2]
+constraint[3] = ['name_3', [-1, 1, 0, 0, 0, 0], '<=', 0]
+constraint[4] = ['name_3', [0, 0, -1, 1, 0, 0], '<=', 0]
+constraint[5] = ['name_3', [0, 0, 0, 0, 1, -1], '<=', 0]

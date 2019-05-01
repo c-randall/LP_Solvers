@@ -4,30 +4,16 @@ Created on Fri Mar 28 8:33:02 2019
 Author: 
     Corey R. Randall
 
-Summary:
-    For larger and more complex problems, users may choose to write a separate 
-    script that contains the objective function, variables, and constraints. 
-    The formulation given below was developed by Mohammad Fathollahzadeh and 
-    Karl Heine at Colorado School of Mines. It attempts to size a PV and 
-    battery system for Hill Hall (one of the buildings on the CSM campus). This 
-    model and its results were presented at the 2019 ASHRAE Winter Conference 
-    that took place in Atlanta, GA. With their permission, the problem was 
-    translated to python by Corey R. Randall for performance tests on the 
-    Primal Simplex Method Algorithm. The more complex problem prompted the 
-    addition of sparse matrices and steep pricing to improve the algorithm's 
-    performance. Findings showed that these additions reduced solution time 
-    from 10 min to 40 sec. Solutions presented at ASHRAE have also been matched
-    by the output of this python model and algorithm for validation purposes.
-    
+Summary:   
     This is a copy of the pv_batt_sizing.py script with substitutions made for
     the penalty varialbes to reduce the number of equations and constraints.
     Without substitutions a combination of Phase 1 and 2 ran in approximately
-    26s. These substitutions should elimate at least 1460 variables and 
+    40s. These substitutions elimated a total of more than 1460 variables and 
     constraints to reduce the problem size and overall computation time. After
     substitutions were made, this in fact provided improved efficiency with
     an overall run time of about 8s. This justifies the addition of a presolve
     at a later point in time that cleans up inefficiencies from user input and
-    performs variable substitutions when possible (i.e. RHS = 0).
+    performs variable substitutions when possible (i.e. when RHS = 0).
     
 """
 
@@ -64,11 +50,7 @@ M_PV = p['M_PV']  # daily multiplier relate PV capacity to generation - from wx
 v = {}
 v['x_B'] = np.array([0])
 v['x_PV'] = np.array([1])
-v['pu_B'] = np.arange(2,2+T)
-v['po_B'] = np.arange(v['pu_B'][-1] +1,v['pu_B'][-1] +1 +T)
-v['pu_PV'] = np.arange(v['po_B'][-1] +1,v['po_B'][-1] +1 +T)
-v['po_PV'] = np.arange(v['pu_PV'][-1] +1,v['pu_PV'][-1] +1 +T)
-v['g'] = np.arange(v['po_PV'][-1] +1,v['po_PV'][-1] +1 +T)
+v['g'] = np.arange(2,2+T)
 v['u_B'] = np.arange(v['g'][-1] +1,v['g'][-1] +1 +T)
 v['e_B'] = np.arange(v['u_B'][-1] +1,v['u_B'][-1] +1 +T)
 v['u_PV'] = np.arange(v['e_B'][-1] +1,v['e_B'][-1] +1 +T)

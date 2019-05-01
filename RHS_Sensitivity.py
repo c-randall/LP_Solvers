@@ -103,8 +103,8 @@ def rhs_sensitivity(user_inputs, constraint, conversion, solution, pass_rhs):
             UB = np.min(delt_val[UB_ind])
             rhs_up = np.round(float(b[i] + UB), user_inputs['dec'])
         
-        rhs_sensitivity_report[i] = constraint[i+1][pointer['name']]+'_range',\
-                            [rhs_down, rhs_up], 'dual:', \
-                            np.round(solution['duals'][i], user_inputs['dec'])
+        rhs_sensitivity_report[i] = \
+        constraint[i+1][pointer['name']]+'_range', [rhs_down, rhs_up], \
+        'dual:', np.round(solution['duals'][0,i], user_inputs['dec'])
     
     return rhs_sensitivity_report

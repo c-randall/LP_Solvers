@@ -14,10 +14,10 @@ Summary:
     that took place in Atlanta, GA. With their permission, the problem was 
     translated to python by Corey R. Randall for performance tests on the 
     Primal Simplex Method Algorithm. The more complex problem prompted the 
-    addition of sparse matrices and steep pricing to improve the algorithm's 
+    addition of sparse matrices and different pricing to improve the algorithm 
     performance. Findings showed that these additions reduced solution time 
     from 10 min to 40 sec. Solutions presented at ASHRAE have also been matched
-    by the output of this python model and algorithm for validation purposes.
+    by the output of this python model for validation.
     
 """
 
@@ -50,7 +50,7 @@ M_B = p['M_B']    # dialy multiplier relate battery size to daily demand
 M_PV = p['M_PV']  # daily multiplier relate PV capacity to generation - from wx
 
 # Variables:
-" Create indexes for all variables for ordering obj./constraint coeffs "
+" Create indecies for all variables to track ordering in c and A coeffs "
 v = {}
 v['x_B'] = np.array([0])
 v['x_PV'] = np.array([1])

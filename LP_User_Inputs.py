@@ -7,79 +7,51 @@ Author:
 Summary:
     Input and runner file for Primal Simplex Method. Inputs can also be loaded
     from a separate file for larger problems. An example of a script for a 
-    larger problem is shown in pv_batt_sizing.py. 
+    larger problem is shown in pv_batt_sizing.py and pv_batt_sizing_sub.py.
 
 """
+
+""" Import Useful Modules """
+"-----------------------------------------------------------------------------"
+import numpy as np
+import os; cwd = os.getcwd();
 
 """ User Inputs """
 "-----------------------------------------------------------------------------"
 # Objective Function: --> ignore due to script import below
- 
+objective = ''
+c_coeff = [] 
 
 # Constraints: --> ignore due to script import below
-
+constraint = {}
+constraint[1] = []
 
 " Alternative to filling in script obj. func. and constraints --> import "
-from pv_batt_sizing import v, objective, c_coeff, constraint
+os.chdir(cwd + '/Problem_Scripts')
+from pv_batt_sizing_sub import v, objective, c_coeff, constraint
 
-# Toggles/options for sensitivity and incoming basis selections:
+# Toggles/options:
 sensitivity = 'off'   # runs a RHS sensitivity analysis ('on' or 'off')
-pricing = 'steep'     # pricing scheme for phase 2 ('steep' or 'bland')
+pricing = 'most'      # pricing scheme for phase 2 ('most' or 'bland')
 incoming = 'first'    # incoming varialbe ('first' or 'last') for bland's
+problem = 'primal'    # problem that method operates on ('primal' or 'dual')
+method = 'primal'     # algorithm method ('primal' or 'dual') Simplex
 
 # Tolerance Conditions: 
 tolerance = 1e-6      # treat any abs(c_bar) <= tolerance as 0
-decimals = 3          # up to this many decimals will be printed in output
+decimals = 3          # maximum number of decimals printed in output
 
 # Display Variables:
-var_names = ['x_B', 'x_PV']     # list of variables to display after solution
+var_names = ['x_B', 'x_PV']     
 
-""" Create Pointers for Later Modifications """
+""" End of user inputs - do not edit anything below this line """
 "-----------------------------------------------------------------------------"
-pointer = {}
-pointer['name'] = 0
-pointer['coeff'] = 1
-pointer['inequality'] = 2
-pointer['b-value'] = 3
+###############################################################################
+###############################################################################
+###############################################################################
 
-""" Run Standard From Conversion """
+""" Execute LP_Simplex_Runner.py with user inputs from above  """
 "-----------------------------------------------------------------------------"
-# Build dictionary to pass information to subfunctions:
-user_inputs = {}
-user_inputs['objective'] = objective
-user_inputs['c_coeff'] = c_coeff
-user_inputs['tolerance'] = tolerance
-user_inputs['pointer'] = pointer
-user_inputs['pricing'] = pricing
-user_inputs['incoming'] = incoming
-user_inputs['dec'] = decimals
-
-from Standard_Form import standard_form
-conversion = standard_form(user_inputs, constraint)
-
-""" Pre-Processing """
-"-----------------------------------------------------------------------------"
-# Fill this in with subfunction that simplifies and checks for errors.
-
-""" Run Phase I """
-"-----------------------------------------------------------------------------"
-from Phase_1 import phase_1
-initial_solution, pass_p2 = phase_1(user_inputs, conversion)
-
-""" Run Phase II """
-"-----------------------------------------------------------------------------"
-from Phase_2 import phase_2
-solution, pass_rhs = phase_2(user_inputs, conversion, initial_solution, pass_p2)
-
-""" Display Requested Variables """
-"-----------------------------------------------------------------------------"
-if solution['bounded'] == 'yes':
-    for i, e in enumerate(var_names):
-        print('  ', e, solution['variables'][v.get(e)])
-
-""" If specified, perform a RHS Sensitivity Analysis """
-"-----------------------------------------------------------------------------"
-if all([sensitivity == 'on', solution['bounded'] == 'yes']):
-    from RHS_Sensitivity import rhs_sensitivity
-    rhs_sensitivity_report = rhs_sensitivity(user_inputs, constraint, 
-                                             conversion, solution, pass_rhs)
+if __name__ == '__main__':
+    exec(open(cwd + '/Simplex_Files/LP_Simplex_Runner.py').read())
+    os.chdir(cwd)

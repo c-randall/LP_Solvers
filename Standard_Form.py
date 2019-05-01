@@ -23,28 +23,28 @@ def standard_form(user_inputs, constraint):
     "-------------------------------------------------------------------------"    
     # Extract dictionary: 
     objective = user_inputs['objective']
-    c_coeff = user_inputs['c_coeff']
+    c_coeff = np.array(user_inputs['c_coeff'])
     pointer = user_inputs['pointer']
     
     # Determine n and m:
     n = len(c_coeff)        # number of variables (excluding slack/excess)
     m = len(constraint)     # number of constraints (excluding non-negativity)
     
-    n_slack = 0
+    n_slack = 0             # number of slack/excess variables
     for i in range(m):
         if constraint[i+1][pointer['inequality']] == '<=':
             n_slack = n_slack + 1
         elif constraint[i+1][pointer['inequality']] == '>=':
             n_slack = n_slack + 1
     
-    # Extend constraints with slack/excess:
+    # Initialize size of A matrix:
     A = np.zeros([m, n+n_slack])
     
     """ Construct and Convert Problem """
     "-------------------------------------------------------------------------"
     # Convert to 'minimize' for standard form:
     if objective == 'maximize':
-        c_coeff = -1*np.array(c_coeff)
+        c_coeff = -1*c_coeff
     
     if n_slack != 0:
         c_coeff = np.hstack((c_coeff, np.zeros(n_slack)))
@@ -72,7 +72,7 @@ def standard_form(user_inputs, constraint):
     conversion = {}
     conversion['A'] = A
     conversion['b'] = b
-    conversion['c_coeff'] = c_coeff
+    conversion['c_coeff'] = np.reshape(c_coeff, [1, c_coeff.size])
     
     conversion['n'] = n
     conversion['m'] = m
