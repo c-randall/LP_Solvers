@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/160264638.svg)](https://zenodo.org/badge/latestdoi/160264638)
 
-# Simplex Methods
+## Simplex Methods
 This code allows the user to solve linear programs with either the primal or dual Simplex method. Theses Simplex methods are algorithms that function by exploring adjacent extreme points created from the intersections of constraints. Since all linear programs are convex, the optima are located at these extreme points. Additionally, the property of convexity allows the algorithm to converge since local optima are globally optimal. 
 
 ## Objective
