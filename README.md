@@ -36,7 +36,7 @@ This tool is released under the BSD-3 clause license, see LICENSE.md for details
 
 If you use this tool as part of a scholarly work, please cite using:
 
-> C.R. Randall (2019) Primal Simplex Method v1.0 [software]. Zenodo. https://zenodo.org/badge/DOI/10.5281/zenodo.2590629
+> C.R. Randall (2019) Primal Simplex Method v1.2 [software]. Zenodo. https://doi.org/10.5281/zenodo.2590629
 
 A BibTeX entry for LaTeX users is
 
@@ -44,12 +44,12 @@ A BibTeX entry for LaTeX users is
 @misc{2dPorousFlux,
     author = {Corey R. Randall},
     year = 2019,
-    title = {Primal Simplex Method v1.0},
-    doi = {10.5281/zenodo.1317600},
-    url = {https://github.com/c-randall/Simplex-Method},
+    title = {Primal Simplex Method v1.2},
+    doi = {10.5281/zenodo.2590629},
+    url = {https://github.com/c-randall/LP_Solver},
 }
 ```
 
 In both cases, please update the entry with the version used. The DOI for the latest version is
-given in the badge at the top, or alternately <https://zenodo.org/badge/DOI/10.5281/zenodo.2590629> will
+given in the badge at the top, or alternately <https://doi.org/10.5281/zenodo.2590629> will
 take you to the latest version (and generally represents all versions).
