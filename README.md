@@ -7,7 +7,9 @@ This code allows the user to solve linear programs with either the primal or dua
 Software presented here is written in Python3 so that it is open and accessible to anyone who would like to use it. Problems can be formulated within the LP_User_Inputs.py file by inputting the variable coefficients for the objective function and constraints. There is no need to formulate the problem in standard form since the model already incorporates a conversion file. Constraints can be named so that the analysis of their duals is easier to interpret. 
 
 ## Instructions
-Use the Sample_Problems.py file for examples of how to input simple problems. For more complex problems, the user may choose to write a script that incorporates sets, parameters, varialbes, an objective, and constraints. An example of loading in a data file and creating an LP in a script has also been provided in the pv_batt_sizing.py and pv_batt_sizing_sub.py files.
+To install this software package onto your location machine, download all of the files from this repository. Save all of the files except for 'LP_User_Inputs.py' in the same folder and name it 'Simplex_Files' (without the quotes). The 'LP_User_Inputs.py' file should be saved in the same location as this folder (but not inside it). Make sure that your Python environment has access to numpy, scipy, sys, and os. Once these steps have been taken, the code is set up to be run and edit in any IDE with Python3 syntax. The user should not edit any routines in the 'Simplex_Files' folder. Instead, this set up has been developed so that the user should only ever need to edit the 'LP_User_Inputs.py' file in order to run any desired problems. 
+
+Check the Sample_Problems.py file for examples of how to input simple problems. For more complex problems, the user may choose to write a script that incorporates sets, parameters, variables, an objective, and constraints. An example of loading in a data file and creating an LP in a script has also been provided in the pv_batt_sizing.py and pv_batt_sizing_sub.py files.
 
 ## User inputs
 The LP_User_Inputs.py file contains the following algorithm controls to be edited as needed by the user:
