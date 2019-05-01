@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2656688.svg)](https://doi.org/10.5281/zenodo.2656688)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2656688.svg)](https://doi.org/10.5281/zenodo.2590629)
 
 ## Simplex Methods
 This code allows the user to solve linear programs with either the primal or dual Simplex method. Theses Simplex methods are algorithms that function by exploring adjacent extreme points created from the intersections of constraints. Since all linear programs are convex, the optima are located at these extreme points. Additionally, the property of convexity allows the algorithm to converge since local optima are globally optimal. 
@@ -32,11 +32,11 @@ This tool is released under the BSD-3 clause license, see LICENSE.md for details
 
 ## Citing the Model
  This model is versioned using Zenodo:
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2656688.svg)](https://doi.org/10.5281/zenodo.2656688)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2656688.svg)](https://doi.org/10.5281/zenodo.2590629)
 
 If you use this tool as part of a scholarly work, please cite using:
 
-> C.R. Randall (2019) Primal Simplex Method v1.0 [software]. Zenodo. https://zenodo.org/badge/DOI/10.5281/zenodo.2656688
+> C.R. Randall (2019) Primal Simplex Method v1.0 [software]. Zenodo. https://zenodo.org/badge/DOI/10.5281/zenodo.2590629
 
 A BibTeX entry for LaTeX users is
 
@@ -51,5 +51,5 @@ A BibTeX entry for LaTeX users is
 ```
 
 In both cases, please update the entry with the version used. The DOI for the latest version is
-given in the badge at the top, or alternately <https://zenodo.org/badge/DOI/10.5281/zenodo.2656688> will
+given in the badge at the top, or alternately <https://zenodo.org/badge/DOI/10.5281/zenodo.2590629> will
 take you to the latest version (and generally represents all versions).
