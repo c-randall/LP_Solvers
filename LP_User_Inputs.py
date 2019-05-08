@@ -41,7 +41,7 @@ sensitivity = 'off'   # runs a RHS sensitivity analysis ('on' or 'off')
 pricing = 'most'      # pricing scheme for phase 2 ('most' or 'bland')
 incoming = 'first'    # incoming varialbe ('first' or 'last') for bland's
 problem = 'primal'    # problem that method operates on ('primal' or 'dual')
-method = 'dual'       # algorithm method ('primal' or 'dual') Simplex
+method = 'primal'     # algorithm method ('primal' or 'dual') Simplex
 verbose = 'off'       # print each iteration's objective value ('on' or 'off')
 
 # Tolerance Conditions: 
