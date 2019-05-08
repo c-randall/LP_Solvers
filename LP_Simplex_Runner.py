@@ -19,9 +19,9 @@ os.chdir(cwd + '/Simplex_Files')
 "-----------------------------------------------------------------------------"
 pointer = {}
 pointer['name'] = 0
-pointer['coeff'] = 1
+pointer['A_coeff'] = 1
 pointer['inequality'] = 2
-pointer['b-value'] = 3
+pointer['b_value'] = 3
 
 """ Run Standard From Conversion """
 "-----------------------------------------------------------------------------"
@@ -29,15 +29,19 @@ pointer['b-value'] = 3
 user_inputs = {}
 user_inputs['objective'] = objective
 user_inputs['c_coeff'] = c_coeff
+user_inputs['sensitivity'] = sensitivity
+user_inputs['constraint'] = constraint
 user_inputs['tolerance'] = tolerance
 user_inputs['pointer'] = pointer
 user_inputs['pricing'] = pricing
 user_inputs['incoming'] = incoming
 user_inputs['problem'] = problem
+user_inputs['method'] = method
+user_inputs['verbose'] = verbose
 user_inputs['dec'] = decimals
 
 from Standard_Form import standard_form
-conversion = standard_form(user_inputs, constraint)
+conversion = standard_form(user_inputs)
 
 if problem == 'dual': # Create and solve the dual problem if specified
     from Dual_Problem import dual_problem
@@ -64,10 +68,10 @@ solution, pass_rhs = phase_2(user_inputs, conversion, initial_solution, pass_p2)
 """ Display Requested Variables """
 "-----------------------------------------------------------------------------"
 if all([solution['bounded'] == 'yes', solution['feasibility'] == 'feasible']):
-    if len(var_names) != 0:
+    try:
         for i, e in enumerate(var_names):
             print('  ', e, np.round(solution['variables'][v.get(e)], decimals))
-    else:
+    except:
         print('   x =', np.round(solution['variables'], decimals))
 
 """ If specified, perform a RHS Sensitivity Analysis """

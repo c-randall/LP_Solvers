@@ -36,6 +36,12 @@ def phase_2(user_inputs, conversion, initial_solution, pass_p2):
     b = sp.csr_matrix(conversion['b'])
     c_coeff = sp.csr_matrix(conversion['c_coeff'])
     
+    if user_inputs['method'] == 'dev_dual':
+        real_col = np.unique(np.hstack([np.arange(0, A.shape[1]), conversion['eq_ind']]))
+        A = sp.csr_matrix(conversion['A'][:,real_col])
+        c_coeff = sp.csr_matrix(conversion['c_coeff'][:,real_col])
+    
+    
     Basis = np.copy(initial_solution['Basis'])
     A_B_inv = pass_p2['A_B_inv']
     
@@ -71,15 +77,13 @@ def phase_2(user_inputs, conversion, initial_solution, pass_p2):
         """ Step 1.) Compute current basic feasible solution """
         # Calculate the solution for the current basis:
         b_bar = A_B_inv.dot(b)
-        b_bar[np.where(abs(b_bar.A) < tolerance)[0], 0] = 0
         
         # Calculate the dual varialbes and reduced cost:
         y_bar = c_B.dot(A_B_inv)
         c_bar = c_coeff - y_bar.dot(A)
-        c_bar[0, np.where(abs(c_bar.A) < tolerance)[1]] = 0
         
         """ Step 2.) Check optimality - if needed choose outgoing varialbe """        
-        if sp.find(b_bar < 0)[0].size == 0:
+        if sp.find(b_bar < -1*tolerance)[0].size == 0:
             # If no improvement, print solution to variables and objective:
             ind_Basis = list(Basis -1)
             x = np.zeros([c_coeff.shape[1], c_coeff.shape[0]])
@@ -98,19 +102,19 @@ def phase_2(user_inputs, conversion, initial_solution, pass_p2):
             break
         
         else:
-            r_ind = most*np.argmin(b_bar.A) + bland*sp.find(b_bar < 0)[0][incoming_ind]
+            r_ind = most*np.argmin(b_bar.A) + bland*sp.find(b_bar < -1*tolerance)[0][incoming_ind]
             
         """ Step 3.) Select incoming variable via minimum ratio test """
         A_bar_r = A_B_inv[r_ind,:].dot(A)
         
-        if sp.find(A_bar_r < 0)[1].size == 0:
+        if sp.find(A_bar_r < -1*tolerance)[1].size == 0:
             feasibility = 'infeasible'
             print('STOP (P2):', feasibility, '- dual is unbounded')
             print('iterations =', count, 
                   ', time =', round(time.time()-t1,2), 's')
             break
     
-        i_neg = sp.find(A_bar_r < -tolerance)[1] # finds A_bar_t < 0
+        i_neg = sp.find(A_bar_r < -1*tolerance)[1] # finds A_bar_t < 0
         ratio_test = -c_bar / A_bar_r
         t_ind = i_neg[np.argmin(ratio_test[0,i_neg])]                 
         
@@ -128,7 +132,8 @@ def phase_2(user_inputs, conversion, initial_solution, pass_p2):
         
         count = count + 1
         
-    #    print('P2 count:', count, 'obj:', c_B.dot(b_bar).A[0])
+        if user_inputs['verbose'] == 'on':
+            print('P2 count:', count, 'obj:', c_B.dot(b_bar).A[0])
     
     #    user_in = input('"Enter" to continue or "Ctrl+d" to cancel.')   
     #    if user_in == KeyboardInterrupt:

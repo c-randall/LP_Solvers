@@ -87,7 +87,7 @@ def phase_1(user_inputs, conversion):
           
     """ Begin Simplex Loop to Replace Artificial Variables """
     "-------------------------------------------------------------------------"
-    for i in range(max_step):  
+    for i in range(max_step):
         """ Step 1.) Compute current basic feasible solution """
         # Calculate the solution for the current basis:
         b_bar = A_B_inv.dot(b)
@@ -96,15 +96,11 @@ def phase_1(user_inputs, conversion):
         y_bar = sp.lil_matrix(c_B.dot(A_B_inv))
         c_bar = sp.lil_matrix(c_tilde - y_bar.dot(A_aug))
         
-        """ Step 2.) Check optimality - if needed choose incoming varialbe """
-        y_bar[0, np.where(abs(y_bar.A) < tolerance)[1]] = 0
-        c_bar[0, np.where(abs(c_bar.A) < tolerance)[1]] = 0
-    
-        if sp.find(c_bar < 0)[1].size == 0:
+        """ Step 2.) Check optimality - if needed choose incoming varialbe """    
+        if sp.find(c_bar < -1*tolerance)[1].size == 0:
             # If no improvement, stop Phase 1 and check feasibility:
-            ind_Basis = list(Basis -1)
             x = np.zeros([c_tilde.shape[1], c_tilde.shape[0]])
-            x[ind_Basis] = b_bar.A
+            x[Basis -1] = b_bar.A
             
             if sp.find(c_B > 0)[1].size != 0:
                 feasibility = 'infeasible'
@@ -120,7 +116,7 @@ def phase_1(user_inputs, conversion):
             break
         
         else:
-            t_ind = sp.find(c_bar < 0)[1][incoming_ind]
+            t_ind = sp.find(c_bar < -1*tolerance)[1][incoming_ind]
             
         """ Step 3.) Select outgoing variable via minimum ratio test """
         A_t = A_aug[:, t_ind]
@@ -128,7 +124,13 @@ def phase_1(user_inputs, conversion):
                         
         i_pos = sp.find(A_bar_t > tolerance)[0] # finds A_bar_t > 0            
         ratio_test = b_bar / A_bar_t
-        r_ind = i_pos[np.argmin(ratio_test[i_pos])]
+        min_ind = i_pos[np.where(ratio_test[i_pos] == min(ratio_test[i_pos]))[0]]
+        
+        try: # attempt to replace any aritificial variables first
+            inter = np.intersect1d(Basis[Basis > n+n_slack], Basis[min_ind])[0]
+            r_ind = np.where(Basis == inter)[0][0]       
+        except:
+            r_ind = min_ind[-1]
         
         """ Step 4.) Update the basis for algorithm to repeat """
         Basis[r_ind] = t_ind +1
@@ -141,8 +143,8 @@ def phase_1(user_inputs, conversion):
         
         count = count + 1
     
-    #    print('P1 count:', count, 'obj:', c_B.dot(b_bar).A[0]) 
-    
+    #    print('P1 count:', count, 'obj:', c_B.dot(b_bar).A[0])
+     
     #    user_in = input('"Enter" to continue or "Ctrl+d" to cancel.')   
     #    if user_in == KeyboardInterrupt:
     #        sys.exit(0)       

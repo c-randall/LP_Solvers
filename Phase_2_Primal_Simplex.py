@@ -48,9 +48,11 @@ def phase_2(user_inputs, conversion, initial_solution, pass_p2):
     # If feasible... assume bounded:
     if initial_solution['feasibility'] == 'infeasible':
         bounded = 'n/a'
+        start = 0
         count = 0
     else:
         bounded = 'yes'
+        start = 1
         count = 0
         c_B = sp.csr_matrix(c_coeff[0, Basis -1])
                    
@@ -69,7 +71,7 @@ def phase_2(user_inputs, conversion, initial_solution, pass_p2):
         
     """ Simplex Method Loop """
     "-------------------------------------------------------------------------"
-    for i in range(max_step):           
+    while all([count < max_step, start == 1]):           
         """ Step 1.) Compute current basic feasible solution """
         # Calculate the solution for the current basis:
         b_bar = A_B_inv.dot(b)
@@ -78,11 +80,8 @@ def phase_2(user_inputs, conversion, initial_solution, pass_p2):
         y_bar = sp.lil_matrix(c_B.dot(A_B_inv))
         c_bar = sp.lil_matrix(c_coeff - y_bar.dot(A))
         
-        """ Step 2.) Check optimality - if needed choose incoming varialbe """
-        y_bar[0, np.where(abs(y_bar.A) < tolerance)[1]] = 0
-        c_bar[0, np.where(abs(c_bar.A) < tolerance)[1]] = 0
-                
-        if sp.find(c_bar < 0)[1].size == 0:
+        """ Step 2.) Check optimality - if needed choose incoming varialbe """                
+        if sp.find(c_bar < -1*tolerance)[1].size == 0:
             # If no improvement, print solution to variables and objective:
             ind_Basis = list(Basis -1)
             x = np.zeros([c_coeff.shape[1], c_coeff.shape[0]])
@@ -103,13 +102,14 @@ def phase_2(user_inputs, conversion, initial_solution, pass_p2):
             break
         
         else:
-            t_ind = most*np.argmin(c_bar.A) + bland*sp.find(c_bar < 0)[1][incoming_ind]
+            t_ind = most*np.argmin(c_bar.A)\
+                  + bland*sp.find(c_bar < -1*tolerance)[1][incoming_ind]
             
         """ Step 3.) Select outgoing variable via minimum ratio test """
         A_t = A[:, t_ind]
         A_bar_t = A_B_inv.dot(A_t)
                    
-        if all(A_bar_t.A <= 0):
+        if sp.find(A_bar_t > tolerance)[1].size == 0:
             bounded = 'no'
             print('STOP (P2): problem is unbounded')
             print('iterations =', count, 
@@ -131,7 +131,8 @@ def phase_2(user_inputs, conversion, initial_solution, pass_p2):
         
         count = count + 1
         
-    #    print('P2 count:', count, 'obj:', c_B.dot(b_bar).A[0])
+        if user_inputs['verbose'] == 'on':
+            print('P2 count:', count, 'obj:', c_B.dot(b_bar).A[0])
     
     #    user_in = input('"Enter" to continue or "Ctrl+d" to cancel.')   
     #    if user_in == KeyboardInterrupt:

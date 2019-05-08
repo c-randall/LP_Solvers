@@ -15,6 +15,7 @@ Summary:
 import scipy, time, sys
 import numpy as np
 import scipy.sparse as sp
+import scipy.linalg as linalg
 from math import factorial as fact
 
 """ Function definition """
@@ -56,6 +57,9 @@ def phase_1(user_inputs, conversion):
         b_bar = A_B_inv.dot(b)
         x = np.zeros([n +n_slack, 1])
         x[Basis -1] = b_bar.A
+        
+        print('End Phase 1... begin Phase 2.')
+        print('iterations =', count, ', time =', round(time.time()-t1,2), 's \n')
     
     # Convert to Dual problem and use Primal Phase I to get starting basis:    
     else:
@@ -135,15 +139,11 @@ def phase_1(user_inputs, conversion):
             y_bar = sp.lil_matrix(c_B.dot(A_B_inv))
             c_bar = sp.lil_matrix(c_tilde - y_bar.dot(A_aug))
             
-            """ Step 2.) Check optimality - if needed choose incoming varialbe """
-            y_bar[0, np.where(abs(y_bar.A) < tolerance)[1]] = 0
-            c_bar[0, np.where(abs(c_bar.A) < tolerance)[1]] = 0
-        
-            if sp.find(c_bar < 0)[1].size == 0:
+            """ Step 2.) Check optimality - if needed choose incoming varialbe """       
+            if sp.find(c_bar < -1*tolerance)[1].size == 0:
                 # If no improvement, stop Phase 1 and check feasibility:
-                ind_Basis = list(Basis -1)
                 x = np.zeros([c_tilde.shape[1], c_tilde.shape[0]])
-                x[ind_Basis] = b_bar.A
+                x[Basis -1] = b_bar.A
                 
                 if sp.find(c_B > 0)[1].size != 0:
                     bounded = 'maybe'
@@ -160,7 +160,7 @@ def phase_1(user_inputs, conversion):
                 break
             
             else:
-                t_ind = sp.find(c_bar < 0)[1][incoming_ind]
+                t_ind = sp.find(c_bar < -1*tolerance)[1][incoming_ind]
                 
             """ Step 3.) Select outgoing variable via minimum ratio test """
             A_t = A_aug[:, t_ind]
@@ -168,7 +168,13 @@ def phase_1(user_inputs, conversion):
                             
             i_pos = sp.find(A_bar_t > tolerance)[0] # finds A_bar_t > 0            
             ratio_test = b_bar / A_bar_t
-            r_ind = i_pos[np.argmin(ratio_test[i_pos])]
+            min_ind = i_pos[np.where(ratio_test[i_pos] == min(ratio_test[i_pos]))[0]]
+            
+            try: # attempt to replace any aritificial variables first
+                inter = np.intersect1d(Basis[Basis > n+n_slack], Basis[min_ind])[0]
+                r_ind = np.where(Basis == inter)[0][0]       
+            except:
+                r_ind = min_ind[-1]
             
             """ Step 4.) Update the basis for algorithm to repeat """
             Basis[r_ind] = t_ind +1
@@ -221,7 +227,7 @@ def phase_1(user_inputs, conversion):
             x = np.zeros([n +n_slack, 1])
             x[Basis -1] = b_bar.A
         except:
-            P, L, U = scipy.linalg.lu(A.A[:, Basis -1])
+            P, L, U = linalg.lu(A.A[:, Basis -1])
             
             try:
                 L_inv = np.linalg.inv(L)
@@ -243,21 +249,19 @@ def phase_1(user_inputs, conversion):
                 x = np.zeros([n +n_slack, 1])
                 x[Basis -1] = b_bar.A
                 
-                c_B = sp.csr_matrix(c_coeff[0, Basis -1])
-                
-                y_bar = c_B.dot(A_B_inv)
-                c_bar = c_coeff - y_bar.dot(A)
-                c_bar[0, np.where(abs(c_bar.A) < tolerance)[1]] = 0
-                
-                if (c_bar.A < 0).any():
-                    sys.tracebacklimit = 0
-                    raise Exception('Use Primal Simplex due to singular inversion.')
-                    sys.tracebacklimit = 1000
-                
             else:
                 sys.tracebacklimit = 0
                 raise Exception('Use Primal Simplex due to singular inversion.')
-                sys.tracebacklimit = 1000
+                
+        c_B = sp.csr_matrix(c_coeff[0, Basis -1])
+        
+        y_bar = c_B.dot(A_B_inv)
+        c_bar = c_coeff - y_bar.dot(A)
+        c_bar[0, np.where(abs(c_bar.A) < tolerance)[1]] = 0
+        
+#        if (c_bar.A < -1*tolerance).any():
+#            sys.tracebacklimit = 0
+#            raise Exception('Use Primal Simplex due initialization.')
         
     """ Post-Processing for Outputs """
     "-------------------------------------------------------------------------"   
