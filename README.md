@@ -41,10 +41,10 @@ If you use this tool as part of a scholarly work, please cite using:
 A BibTeX entry for LaTeX users is
 
 ```TeX
-@misc{2dPorousFlux,
+@misc{LP_Solver,
     author = {Corey R. Randall},
     year = 2019,
-    title = {Primal Simplex Method v1.2},
+    title = {Python Simplex Solver v1.2},
     doi = {10.5281/zenodo.2590629},
     url = {https://github.com/c-randall/LP_Solver},
 }
